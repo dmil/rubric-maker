@@ -1,6 +1,7 @@
 import requests
 from dotenv import load_dotenv
 import os
+import json
 
 # ─── LOAD CREDENTIALS ───────────────────────────────────────────────────────────
 load_dotenv()
@@ -12,101 +13,9 @@ ASSIGNMENT_ID = os.getenv("CANVAS_ASSIGNMENT_ID")     # optional; leave blank to
 BASE_URL = f"https://{SUBDOMAIN}/api/v1"
 HEADERS  = {"Authorization": f"Bearer {API_TOKEN}"}
 
-# ─── RUBRIC DEFINITION (✱ THIS IS THE ONLY PART THAT CHANGED) ──────────────────
-rubric = [
-    {
-        "description": "Story Potential",
-        "long_description": "Is the idea newsworthy, original, and compelling?",
-        "points": 3,
-        "criterion_use_range": False,
-        "ratings": [
-            {
-                "description": "✅ / 🤯 Strong, original, timely story idea",
-                "points": 3,
-                "long_description": ""
-            },
-            {
-                "description": "⚠ / 🤔 Some story potential; needs sharper focus, relevance, or originality",
-                "points": 2,
-                "long_description": ""
-            },
-            {
-                "description": "⛔ Story idea is weak, stale, or not clearly connected to real-world issues",
-                "points": 0,
-                "long_description": ""
-            }
-        ]
-    },
-    {
-        "description": "Use of Data",
-        "long_description": "Has the regression meaningfully informed the story idea or the reporter’s thinking?",
-        "points": 3,
-        "criterion_use_range": False,
-        "ratings": [
-            {
-                "description": "✅ / 🤯 Thoughtful connection between analysis and story development",
-                "points": 3,
-                "long_description": ""
-            },
-            {
-                "description": "⚠ / 🤔 Connection between analysis and story is weak, vague, or unclear",
-                "points": 2,
-                "long_description": ""
-            },
-            {
-                "description": "⛔ Misinterpretation of regression; major misunderstanding of the data",
-                "points": 0,
-                "long_description": ""
-            }
-        ]
-    },
-    {
-        "description": "Next Steps",
-        "long_description": "Is there a clear plan for strengthening the analysis or further developing the reporting?",
-        "points": 3,
-        "criterion_use_range": False,
-        "ratings": [
-            {
-                "description": "✅ / 🤯 Clear and thoughtful next steps outlined",
-                "points": 3,
-                "long_description": ""
-            },
-            {
-                "description": "⚠ / 🤔 Plan is vague, thin, or missing important elements",
-                "points": 2,
-                "long_description": ""
-            },
-            {
-                "description": "⛔ No awareness of what still needs work; missing critical steps",
-                "points": 0,
-                "long_description": ""
-            }
-        ]
-    },
-    {
-        "description": "Clarity and Writing",
-        "long_description": "Is the pitch clear, logical, easy to understand, and professional?",
-        "points": 3,
-        "criterion_use_range": False,
-        "ratings": [
-            {
-                "description": "✅ / 🤯 Clear, engaging, appropriate writing for journalism",
-                "points": 3,
-                "long_description": ""
-            },
-            {
-                "description": "⚠ / 🤔 Writing is somewhat unclear, unfocused, or too technical",
-                "points": 2,
-                "long_description": ""
-            },
-            {
-                "description": "⛔ Pitch is confusing, sloppy, or inappropriate in tone",
-                "points": 0,
-                "long_description": ""
-            }
-        ]
-    }
-]
+# ─── LOAD RUBRIC FROM JSON FILE ────────────────────────────────────────────────
+with open("rubric.json", "r", encoding="utf-8") as f:
+    rubric = json.load(f)
 
 # ─── BUILD FORM-ENCODED PAYLOAD ────────────────────────────────────────────────
 rubric_payload = {
